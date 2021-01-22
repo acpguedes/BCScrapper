@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from BCScrapper.bcscrapper import BCCambio, BCReport
+from . BCScrapper.bcscrapper import BCCambio, BCReport
 from datetime import datetime, timedelta
 
 today = datetime.today()
