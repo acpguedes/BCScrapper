@@ -35,6 +35,7 @@ def parse_cli():
     return(args)
 
 if __name__ == "__main__":
+
     args = parse_cli()
     report = bcscrapper.BCReport(args.data_inicial, args.data_final)
     report.report.to_csv(args.output)
