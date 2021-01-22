@@ -35,9 +35,36 @@ def parse_cli():
     args.file = input_to_set(parser,args.file)
     return(args)
 
+def input_to_set(parser,largs):
+    # Process sys.stdin
+    if sys.stdin.isatty():
+        if len(largs) == 0:
+            parser.error("No input!")
+    elif not "-" in largs:
+        largs.insert(0,sys.stdin)
 
-args = parse_cli()
+    # Process sys.argv
+    myset=set()
+    for iohandle in largs:
+        try:
+            iohandle = open(iohandle, mode="r")
+            myset=myset.union(iohandle.read().splitlines())
+            iohandle.close
+        except:
+            try:
+                myset=myset.union(iohandle.read().splitlines())
+            except:
+                if iohandle == "-":
+                    if sys.stdin.isatty():
+                        parser.error("No input!")
+                    else:
+                        myset=myset.union(sys.stdin.read().splitlines())
+                else:
+                    myset.add(iohandle)
+    return(myset)
 
-report = bcscrapper.BCReport(args.data_inicial, args.data_final)
 
-report.report.to_csv(args.output)
+if __name__ == "__main__":
+    args = parse_cli()
+    report = bcscrapper.BCReport(args.data_inicial, args.data_final)
+    report.report.to_csv(args.output)

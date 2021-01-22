@@ -1,0 +1,13 @@
+README.md
+setup.py
+BCScrapper/__init__.py
+BCScrapper/bcscrapper.py
+BCScrapper.egg-info/PKG-INFO
+BCScrapper.egg-info/SOURCES.txt
+BCScrapper.egg-info/dependency_links.txt
+BCScrapper.egg-info/requires.txt
+BCScrapper.egg-info/top_level.txt
+sample/__init__.py
+sample/sample.py
+tests/__init__.py
+tests/test_BCScrapper.py
