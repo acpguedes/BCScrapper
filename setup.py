@@ -8,5 +8,6 @@ setup(
     license='GNU General Public License v3.0',
     author='Aureliano Guedes',
     author_email='guedes.aureliano@gmail.com',
-    description='Scrapper of currency '
+    description='Scrapper of currency ',
+    test_suite='test'
 )
