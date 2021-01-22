@@ -44,14 +44,6 @@ def bc_date_format(text):
             pass
     raise ValueError('Formato de data invalido')
 
-    def __fix_data__(data):
-        data = pd.read_csv(StringIO(data))
-        data['dataHoraCotacao'] = data['dataHoraCotacao'].apply(lambda x: bc_date_format(x))
-        data['cotacaoCompra'] = data['cotacaoCompra'].replace(',', '.', regex=True).astype(float)
-        data['cotacaoVenda'] = data['cotacaoVenda'].replace(',', '.', regex=True).astype(float)
-        assert isinstance(data, pd.core.frame.DataFrame)
-        return data
-
 
 def set_period(first_day=None, last_day=None):
     try:
@@ -86,13 +78,30 @@ class BCCambio:
 
         return response.get_data
 
-    def currency_report(self, first_day, last_day=datetime.date.today().isoformat()) -> pd.core.frame.DataFrame:
+
+def fix_data(data: requests.models.Response):
+    data = pd.read_csv(StringIO(data))
+    data['dataHoraCotacao'] = data['dataHoraCotacao'].apply(lambda x: bc_date_format(x))
+    data['cotacaoCompra'] = data['cotacaoCompra'].replace(',', '.', regex=True).astype(float)
+    data['cotacaoVenda'] = data['cotacaoVenda'].replace(',', '.', regex=True).astype(float)
+    assert isinstance(data, pd.core.frame.DataFrame)
+    return data
+
+
+class BCReport:
+
+    def __init__(self, first_day, last_day=datetime.date.today().isoformat()):
+        self.first_day = first_day
+        self.last_day = last_day
+
+    @property
+    def report(self) -> pd.core.frame.DataFrame:
         currency = BCCambio()
-        euro = currency.get_currency('EUR', first_day, last_day)
-        dollar = currency.get_currency('USD', first_day, last_day)
-        euro = __fix_data__(euro.text)[['cotacaoCompra', 'cotacaoVenda', 'dataHoraCotacao']]
+        euro = currency.get_currency('EUR', self.first_day, self.last_day)
+        dollar = currency.get_currency('USD', self.first_day, self.last_day)
+        euro = fix_data(euro.text)[['cotacaoCompra', 'cotacaoVenda', 'dataHoraCotacao']]
         euro.columns = ['euroCompra', 'euroVenda', 'dataHoraCotacao']
-        dollar = __fix_data__(dollar.text)[['cotacaoCompra', 'cotacaoVenda', 'dataHoraCotacao']]
+        dollar = fix_data(dollar.text)[['cotacaoCompra', 'cotacaoVenda', 'dataHoraCotacao']]
         dollar.columns = ['dollarCompra', 'dollarVenda', 'dataHoraCotacao']
         return dollar.groupby('dataHoraCotacao').mean().merge(euro.groupby('dataHoraCotacao').mean(),
                                                               on='dataHoraCotacao')
