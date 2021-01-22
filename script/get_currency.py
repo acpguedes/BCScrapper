@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from BCScrapper.bcscrapper import BCReport
+from BCScrapper import bcscrapper
 import argparse
 from datetime import datetime
 
@@ -38,6 +38,6 @@ def parse_cli():
 
 args = parse_cli()
 
-report = BCReport(args.data_inicial, args.data_final)
+report = bcscrapper.BCReport(args.data_inicial, args.data_final)
 
 report.report.to_csv(args.output)
