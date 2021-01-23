@@ -1,5 +1,6 @@
-# BCSrapper
+# BCScraper
 
+**Banco Central Scraper**
 Package to fetch data of currency exchange of USD and EUR against BRL from [Banco Central do Brasil](https://www.bcb.gov.br/).
 
 ## Installation
